@@ -1,22 +1,39 @@
-import { FormEvent, useState } from 'react';
-import styles from './PostComments.module.css';
+import { FormEvent, useState } from 'react'
+import styles from './PostComments.module.css'
 
-import Comment from '../../models/Comment';
+// Modelo do comentário
+import Comment from '../../models/Comment'
 
+// Componente responsável por listar e adicionar comentários
 const Post = () => {
-    const [comments, setComments] = useState<Comment[]>([]);
-    const [tempComment, setTempComment] = useState('');
+    // Estado que armazena a lista de comentários
+    const [comments, setComments] = useState<Comment[]>([])
 
+    // Estado temporário para o texto digitado no textarea
+    const [tempComment, setTempComment] = useState('')
+
+    // Função executada ao enviar o formulário
     function handleAddComment(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const newComment = new Comment(comments.length, tempComment);
-        setTempComment('');
-        setComments([...comments, newComment]);
+        // Evita o recarregamento da página
+        event.preventDefault()
+
+        // Cria um novo comentário com id e texto
+        const newComment = new Comment(comments.length, tempComment)
+
+        // Limpa o campo de texto após o envio
+        setTempComment('')
+
+        // Atualiza o estado adicionando o novo comentário à lista
+        setComments([...comments, newComment])
     }
 
     return (
         <div>
-            <ul className={styles['post-comments']}>
+            {/* Lista de comentários renderizados */}
+            <ul
+                className={styles['post-comments']}
+                data-testid="comment-list"
+            >
                 {comments.map(({ comment, id }) => (
                     <li className={styles['post-comment']} key={id}>
                         <p className={styles['post-comment-content']}>
@@ -25,14 +42,32 @@ const Post = () => {
                     </li>
                 ))}
             </ul>
-            <form onSubmit={handleAddComment} className={styles['post-comments-form']}>
-                <textarea value={tempComment} onChange={e => setTempComment(e.target.value)} required className={styles['post-comments-form-textarea']} />
-                <button type="submit" className={styles['post-comments-form-button']}>
+
+            {/* Formulário para adicionar novos comentários */}
+            <form
+                onSubmit={handleAddComment}
+                className={styles['post-comments-form']}
+            >
+                {/* Campo de texto para digitar o comentário */}
+                <textarea
+                    value={tempComment}
+                    onChange={e => setTempComment(e.target.value)}
+                    required
+                    className={styles['post-comments-form-textarea']}
+                    data-testid="comment-input"
+                />
+
+                {/* Botão responsável por enviar o comentário */}
+                <button
+                    type="submit"
+                    className={styles['post-comments-form-button']}
+                    data-testid="comment-button"
+                >
                     Comentar
                 </button>
             </form>
         </div>
-    );
+    )
 }
 
-export default Post;
+export default Post
